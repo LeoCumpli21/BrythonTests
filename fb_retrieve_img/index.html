@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.9.1/brython.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.9.1/brython_stdlib.js"></script>
+    <title>fb api</title>
+</head>
+
+
+<body onload = brython()>
+    <h1 id="h1"> Utilizar Brython para mostrar imagen recuperada con la API de Fb</h1>
+    <p id="p1"> La URL que utilizaremos será https://graph.facebook.com/'+user+'/picture?type=large  <br> donde user será un usuario que tú ingreses</p>
+    <br>
+    <br>
+    <p id="p2"> Prueba con el usuario -coldplay-</p>
+
+    <div id="div1">
+        <label for="dato">¿De qué usuario quieres recuperar su foto de perfil?</label>
+        <input type="text" id="dato">
+        <input type="button" id="usuario-obtenido" value="Mostrar usuario">
+        <br>
+        <br>
+        <p id="url"></p>
+        <br>
+        <input type="button" id="foto-obtenida" value="Mostrar foto del usuario">
+
+    </div>
+    <p id="archivo-binario"></p>    
+    <div id="mensaje"></div>
+    <div id="div-imagen"></div>
+
+    <!-- <input type="button" id="boton-foto" value="Foto de fb"> -->
+
+    <script type="text/python" id="parte1">
+        from browser import document, alert, html, ajax
+
+        def obtener_usuario(evento):
+            global user 
+            user = document['dato'].value
+            alert('El usuario que ingresaste fue ' + user)
+            document['url'].text = 'La url a solicitar es la siguiente: ' +  'https://graph.facebook.com/'+user+'/picture?type=large'
+
+        def obtener_foto(ev):
+            import urllib.request
+            import base64
+            global user
+
+            
+            figura = urllib.request.urlopen(f'https://graph.facebook.com/{user}/picture?type=large').read()
+            
+            imagen_b64 = base64.b64encode(figura).decode("ASCII")
+            print(type(imagen_b64))            
+            document['div-imagen'].text = 'La imagen recuperada es la siguiente:'
+            document['div-imagen'] <= html.BR()
+            document['div-imagen'] <= html.IMG(src="data:image/jpg;base64,"+ imagen_b64, height=300, id="imagen")    
+
+        user = None
+
+        document['usuario-obtenido'].bind('click', obtener_usuario)
+        
+        document['foto-obtenida'].bind('click', obtener_foto)
+
+    
+    </script>
+
+
+    
+</body>
+</html>
