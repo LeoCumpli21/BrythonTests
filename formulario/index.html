@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.9.1/brython.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.9.1/brython_stdlib.js"></script>
+
+    <title>Formulario web</title>
+</head>
+
+<body onload=brython()>
+
+    <h1 id="h1">Primer Formulario web</h1>
+
+
+    <div id="right"></div>
+
+    <div id="container"></div>
+
+    <div id="mensajeMostrado"></div>
+
+    <script type="text/python" id="codigo1">
+        from browser import document, window, html, bind
+        
+        def dialog(draw, remove, callback):
+            #draw and remove are the functions that draw and remove the dialog box.
+            #draw() returns a 3-elemnt tuple: the <input> tag, the "Ok" and "Cancelar" buttons.
+            global nombre 
+
+            inp, btn_ok, btn_cancel = draw_dialog()
+            nombre = inp.value
+            @bind(btn_ok, "click")
+            def click(ev):
+                val = inp.value
+                remove()
+                callback(val)
+
+
+            @bind(btn_cancel, "click")
+            def cancel(ev):
+                remove()
+
+            @bind(inp, "keyup")
+            def keyup(ev):
+                if ev.keyCode ==13:
+                    click(ev)
+
+        def draw_dialog():
+            """Draw the dialog box, with an INPUT field and buttons "Ok" and "Cancelar"."""
+            try: 
+                zone = document["zone"]
+                zone.clear()
+            except KeyError:
+                zone = html.DIV(id="zone")
+                document["right"] <= zone
+
+            msg = html.DIV("Ingresa tu nombre",style={"text-align": "center"} )
+            inp = html.INPUT()
+            msg <= html.BR() + inp
+            buttons = html.DIV(style={"text-align": "center"})
+            btn_ok = html.BUTTON("Ok")
+            btn_cancel = html.BUTTON("Cancelar")
+            buttons <= btn_ok + btn_cancel
+            zone <= msg + html.BR() + buttons
+
+            # set focus on the <input> tag
+            inp.focus()
+        
+            # return the 3-element tuple expected by dialog()
+            return inp, btn_ok, btn_cancel
+            
+        def remove():
+            """Remove the dialog box."""
+            document["zone"].clear()
+        
+        def show(value):
+            """Called when user entered a valid value."""
+            document["zone"].clear()
+            document["zone"] <= f"Nombre ingresado: {value}"
+        
+        nombre = None
+
+        dialog(draw_dialog,
+               remove,
+               callback=show)
+        '''
+        btn_msg = html.BUTTON("MOSTRAR-MENSAJE", id="bmg")
+        mensaje = html.DIV(id="msje")
+        mensaje <= btn_msg 
+        
+        
+        def mostrar_mensaje(ev):
+            document[mensaje].text = f"Hola {nombre}"
+
+        document["msje"].bind("click", mostrar_mensaje)
+        '''
+           
+    
+    </script>
+
+    <script type="text/python" id="codigoprueba">
+        from browser import document
+        from browser import html, bind
+
+        # All the elements will be inserted in the div with the "container" id
+        container = document['container']
+
+        # We create a new div element
+        newdiv = html.DIV(id = "new-div")
+        # Now we add some style
+        newdiv.style = {"padding": "5px", 
+                    "backgroundColor": "#ADD8E6"}
+
+        # a form? why not?
+        form = html.FORM()
+        input1 = html.INPUT(type="text",  id="nombre", value="Su nombre")
+        input2 = html.INPUT(type="text", id="apellido", value="Su apellido")
+
+        form <= input1 + html.BR() + input2 + html.BR() 
+
+        newdiv <= form + html.BR() 
+
+
+
+        # And finally we append the newdiv element
+        # to the parent, in this case the div with the "container" id
+        container <= newdiv 
+ 
+
+
+    </script>
+    
+</body>
+</html>
