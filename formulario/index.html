@@ -13,148 +13,30 @@
 <body onload=brython()>
 
     <h1 id="h1">Primer Formulario web</h1>
-
-    <!--
-    <div id="right"></div>
-
-    <div id="container"></div>
-
-    <div id="mensajeMostrado"></div>
-
-    <br>
-    <br>
-    <br>
-    -->
     <div id="formulario-1"></div>
     
 
-    <!--
-    <script type="text/python" id="codigo1">
-        from browser import document, window, html, bind
-        
-        def dialog(draw, remove, callback):
-            #draw and remove are the functions that draw and remove the dialog box.
-            #draw() returns a 3-elemnt tuple: the <input> tag, the "Ok" and "Cancelar" buttons.
-            global nombre 
-
-            inp, btn_ok, btn_cancel = draw_dialog()
-            nombre = inp.value
-            @bind(btn_ok, "click")
-            def click(ev):
-                val = inp.value
-                remove()
-                callback(val)
-
-
-            @bind(btn_cancel, "click")
-            def cancel(ev):
-                remove()
-
-            @bind(inp, "keyup")
-            def keyup(ev):
-                if ev.keyCode ==13:
-                    click(ev)
-
-        def draw_dialog():
-            """Draw the dialog box, with an INPUT field and buttons "Ok" and "Cancelar"."""
-            try: 
-                zone = document["zone"]
-                zone.clear()
-            except KeyError:
-                zone = html.DIV(id="zone")
-                document["right"] <= zone
-
-            msg = html.DIV("Ingresa tu nombre",style={"text-align": "center"} )
-            inp = html.INPUT()
-            msg <= html.BR() + inp
-            buttons = html.DIV(style={"text-align": "center"})
-            btn_ok = html.BUTTON("Ok")
-            btn_cancel = html.BUTTON("Cancelar")
-            buttons <= btn_ok + btn_cancel
-            zone <= msg + html.BR() + buttons
-
-            # set focus on the <input> tag
-            inp.focus()
-        
-            # return the 3-element tuple expected by dialog()
-            return inp, btn_ok, btn_cancel
-            
-        def remove():
-            """Remove the dialog box."""
-            document["zone"].clear()
-        
-        def show(value):
-            """Called when user entered a valid value."""
-            document["zone"].clear()
-            document["zone"] <= f"Nombre ingresado: {value}"
-        
-        nombre = None
-
-        dialog(draw_dialog,
-               remove,
-               callback=show)
-        '''
-        btn_msg = html.BUTTON("MOSTRAR-MENSAJE", id="bmg")
-        mensaje = html.DIV(id="msje")
-        mensaje <= btn_msg 
-        
-        
-        def mostrar_mensaje(ev):
-            document[mensaje].text = f"Hola {nombre}"
-
-        document["msje"].bind("click", mostrar_mensaje)
-        '''
-           
-    
-    </script>
-
-    <script type="text/python" id="codigoprueba">
-        from browser import document
-        from browser import html, bind
-
-        # All the elements will be inserted in the div with the "container" id
-        container = document['container']
-
-        # We create a new div element
-        newdiv = html.DIV(id = "new-div")
-        # Now we add some style
-        newdiv.style = {"padding": "5px", 
-                    "backgroundColor": "#ADD8E6"}
-
-        # a form? why not?
-        form = html.FORM()
-        input1 = html.INPUT(type="text",  id="nombre", value="Su nombre")
-        input2 = html.INPUT(type="text", id="apellido", value="Su apellido")
-
-        form <= input1 + html.BR() + input2 + html.BR() 
-
-        newdiv <= form + html.BR() 
-
-
-
-        # And finally we append the newdiv element
-        # to the parent, in this case the div with the "container" id
-        container <= newdiv 
- 
-
-
-    </script>
-    -->
     <script type="text/python" id="formulario0">
-        from browser import document, html, window, console
+        from browser import document, html
 
-        h2_contacto = html.H2('Contáctanos')
+        #ENTRADAS
         inp_nombre = html.INPUT(type="text", id="nombre-1", placeholder="Ingrese su nombre")
         inp_apellido = html.INPUT(type="text", id="apellido-1", placeholder="Ingrese su apellido")
         inp_email = html.INPUT(type="text", id="email", placeholder="Ingrese su email")
         inp_asunto = html.INPUT(type="text", id="asunto")
         inp_mensaje = html.TEXTAREA(id="mensaje", cols="60", rows="10")
-
+        
+        #ENCABEZADOS
+        h2_contacto = html.H2('Contáctanos')
         h5_nombre = html.H5('Nombre')
         h5_apellido = html.H5('Apellido')
         h5_email = html.H5('Email')
         asunto = html.H5('Asunto')
         mensaje = html.H5('Mensaje')
+
+        #BOTONES
+        btn_guardar = html.BUTTON("Guardar", id="guardar-btn")
+        btn_enviar = html.BUTTON("Enviar", id="enviar-btn")
 
         document['formulario-1'] <= h2_contacto + html.P('Puede usar este formulario para contactarnos')
         document['formulario-1'] <= h5_nombre + inp_nombre 
@@ -162,7 +44,47 @@
         document['formulario-1'] <= h5_email + inp_email
         document['formulario-1'] <= asunto + inp_asunto
         document['formulario-1'] <= mensaje + inp_mensaje
+        document['formulario-1'] <= html.BR() + btn_guardar + html.BR() + html.BR() +  btn_enviar 
 
+
+        def guardar_contenido(e):
+            global nom_val
+            global ape_val
+            global email_val
+            global asu_val
+            global msj_val
+
+            nom_val = document['nombre-1'].value
+            ape_val = document['apellido-1'].value
+            email_val = document['email'].value
+            asu_val = document['asunto'].value
+            msj_val = document['mensaje'].value
+            print(nom_val, ape_val, email_val, asu_val, msj_val)
+
+        
+
+
+        def desplegar_contenido(e):
+            document['caja'].textContent =  '' 
+            document['caja'] <= html.P(f"De: {nom_val} {ape_val}, {email_val}") + html.P("Para: PyZombis") + html.P(f"Asunto: {asu_val}" + html.P(f"Menaje: {msj_val}"))
+           
+        def enviar_msj(e):
+            caja = html.DIV("CARGANDO", style={"text-align": "center"}, id="caja")
+            document['formulario-1'] <= caja
+            desplegar_contenido(e)
+            document['formulario-1'] <= caja
+
+
+        #variables globales
+        nom_val = None
+        ape_val = None
+        email_val = None
+        asu_val  =None
+        msj_val = None
+
+        document['guardar-btn'].bind('click', guardar_contenido)
+        document['enviar-btn'].bind('click', enviar_msj)
+        
     </script>
 
 
