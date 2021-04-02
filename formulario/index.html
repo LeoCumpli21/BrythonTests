@@ -14,13 +14,21 @@
 
     <h1 id="h1">Primer Formulario web</h1>
 
-
+    <!--
     <div id="right"></div>
 
     <div id="container"></div>
 
     <div id="mensajeMostrado"></div>
 
+    <br>
+    <br>
+    <br>
+    -->
+    <div id="formulario-1"></div>
+    
+
+    <!--
     <script type="text/python" id="codigo1">
         from browser import document, window, html, bind
         
@@ -131,6 +139,32 @@
 
 
     </script>
-    
+    -->
+    <script type="text/python" id="formulario0">
+        from browser import document, html, window, console
+
+        h2_contacto = html.H2('Contáctanos')
+        inp_nombre = html.INPUT(type="text", id="nombre-1", placeholder="Ingrese su nombre")
+        inp_apellido = html.INPUT(type="text", id="apellido-1", placeholder="Ingrese su apellido")
+        inp_email = html.INPUT(type="text", id="email", placeholder="Ingrese su email")
+        inp_asunto = html.INPUT(type="text", id="asunto")
+        inp_mensaje = html.TEXTAREA(id="mensaje", cols="60", rows="10")
+
+        h5_nombre = html.H5('Nombre')
+        h5_apellido = html.H5('Apellido')
+        h5_email = html.H5('Email')
+        asunto = html.H5('Asunto')
+        mensaje = html.H5('Mensaje')
+
+        document['formulario-1'] <= h2_contacto + html.P('Puede usar este formulario para contactarnos')
+        document['formulario-1'] <= h5_nombre + inp_nombre 
+        document['formulario-1'] <= h5_apellido + inp_apellido
+        document['formulario-1'] <= h5_email + inp_email
+        document['formulario-1'] <= asunto + inp_asunto
+        document['formulario-1'] <= mensaje + inp_mensaje
+
+    </script>
+
+
 </body>
 </html>
