@@ -14,7 +14,7 @@
 
     <h1 id="h1">Primer Formulario web</h1>
     <div id="formulario-1"></div>
-    
+    <div id="formulario-2"></div>
 
     <script type="text/python" id="formulario0">
         from browser import document, html
@@ -86,7 +86,71 @@
         document['enviar-btn'].bind('click', enviar_msj)
         
     </script>
+    
+    <script type="text/python" id="formulario1">
+        from browser import document, html
 
+        preguntas = ["1+1", "2+2", "10 x 50", "5 elevado al cuadrado", "(64 - 9) x (5+7)"]
+
+        #ENCABEZADOS
+        segundo_formulario = html.H1("Segundo Formaulario Web: Cuestionario matemático", id="sec-form")
+
+        #BOTONES
+        btn_crear = html.BUTTON("Mostrar resultados", id="crear-btn")
+        btn_siguiente = html.BUTTON("Siguiente", id="siguiente-btn")
+        btn_comenzar = html.BUTTON("Comenzar cuestionario", id="comenzar-btn")
+
+        #DIV PARA CUESTIONARIO
+        cuestionario = html.DIV(html.H3("Responda el siguiente cuestionario matemático") + html.P('Cuando haya escrito la respuesta, clickee en "Siguiente"'), id="cuestionario-1")
+        pregunta = html.P()
+        inp_pregunta = html.INPUT(type="text", id="pregunta") 
+
+        #CREANDO TABLA DE RESULTADOS
+        tabla = html.TABLE(id="tabla-1", border="ridge #0f0fef 1px")
+        titulo_t = html.CAPTION("Ejemplo de tabla")
+        cuerpo_t = html.TBODY(id="t-body")
+               
+        document['formulario-2'] <= segundo_formulario
+        document['formulario-2'] <= cuestionario <= btn_comenzar
+
+        def crear_tabla(e):
+            '''Crea una tabla de 4 columnas con las preguntas, la respuesta que se dio
+            el resultado correcto y los puntos obtenidos'''
+
+            document["tabla-1"] <= titulo_t 
+            document["tabla-1"] <= cuerpo_t <= html.TR(id="row-0") <= html.TH("Pregunta") + html.TD("Tu respuesta") + html.TD("Resultado correcto") + html.TD("Puntos obtenidos")
+
+        def mostrar_boton_resultados():
+            '''Oculta el botón de Siguiente y muestra el de los resultados'''
+
+            btn_siguiente.style.display = "none"
+            document['cuestionario-1'] <= btn_crear    
+            document['crear-btn'].bind('click', crear_tabla)
+
+        def siguiente_preg(e):
+            global i
+            if i <= (len(preguntas) -1): 
+                pregunta.text = preguntas[i]
+                i += 1
+            else:
+                btn_comenzar.onclick = mostrar_boton_resultados()
+
+        def comenzar(e):
+            btn_comenzar.style.display = 'none'
+            siguiente_preg(e)    
+            document['cuestionario-1'] <= pregunta + inp_pregunta + btn_siguiente
+            document['siguiente-btn'].bind('click', siguiente_preg)
+
+        #VARIABLES GLOBALES
+        i = 0
+
+        document['comenzar-btn'].bind('click', comenzar)
+        
+        #DESPLEGANDO TABLA DE RESULTADOS
+        document['formulario-2'] <= html.BR() + html.BR() + tabla + html.BR() 
+        
+        
+    </script>
 
 </body>
 </html>
